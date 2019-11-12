@@ -6,6 +6,7 @@ Resource links:
     https://learn.adafruit.com/adafruit-vl6180x-time-of-flight-micro-lidar-distance-sensor-breakout/overview
     https://circuitpython.readthedocs.io/en/4.x/shared-bindings/busio/__init__.html
     https://learn.sparkfun.com/tutorials/graph-sensor-data-with-python-and-matplotlib/speeding-up-the-plot-animation
+
 @author: Raymond
 """
 
@@ -17,7 +18,7 @@ import numpy as np
 import time
 import os
 import sys
-import datetime
+from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
@@ -29,9 +30,10 @@ try:
     sensor = adafruit_vl6180x.VL6180X(i2c) # link to I2C
 except ValueError:
     print("Sensor not detected! Is an I2C device connected?")
+    sys.exit() # exit program
 
-# # Set up variables for plotting
-DAQRate = 5
+# Set up variables for plotting
+timeSpan = 5 # time span for plotting, 0 to 5 seconds
 xLen = 101 # 101 datapoints per plot
 yRange = [0, 100] # Y range from 0 to 100mm
 
@@ -39,20 +41,26 @@ yRange = [0, 100] # Y range from 0 to 100mm
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 ax.set_ylim(yRange)
-xs = list(np.linspace(0, DAQRate, xLen)) # x data (time)
+xs = list(np.linspace(0, timeSpan, xLen)) # x data (time)
 ys = [0] * xLen # y data (distance)
-
 line, = ax.plot(xs, ys) # unpack tuple to take first element only
-
 plt.title("VL6180X Distance vs Time")
 plt.xlabel("Time (s)")
 plt.ylabel("Distance (mm)")
 
-try: 
-    while True:
+# Prepare CSV for datalogging
+currentDT = datetime.datetime.now()
+file = open("DistanceTest_" + currentDT.strftime("%Y_%m_%d_%H_%M_%S") + ".txt", "w")
+file.write("Time" + "\t" + "Distance" + "\t" + "Lumens")
+
+# Main try/except while loop for animations and data updating
+startTime = time.time()
+while True: 
+    try:
         def animate(i, ys):
             range = sensor.range
-            print("Range: {0}mm".format(range), end = '\r')
+            lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_5) # default gain_5 suggestion
+            print("Range: {0}mm\t Light: {0}lux".format(range, lumens), end = '\r') # '\r' line ending to dynamically write on one line
 
             ys.append(range) # add to plot
             ys = ys[-xLen:] # limit y data
@@ -60,18 +68,18 @@ try:
             
             return line,
 
+        # Use blit to speed things up
         animashun = animation.FuncAnimation(fig, animate, fargs = (ys,), interval = 50, blit = True)
         plt.grid()
         plt.show()
-except KeyboardInterrupt:
-    print ("\nKeyboard interrupt detected...")
-
-# try:
-#     while True:
-#         range = sensor.range
-#         lums = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_1)
-#         print("Range: {0}mm\t Light: {0}lux".format(range, lums), end = "\r")
         
-#         # time.sleep(1/DAQRate) # 10 Hz DAQ rate
-# except KeyboardInterrupt:
-#     print("\nKeyboard interrupt detected, stopping readings...")
+        # Write to file
+        endTime = time.time()
+        file.write("\n" + (endTime - startTime) + "\t" + range + "\t" + lumens)
+    except KeyboardInterrupt:
+        print ("\nKeyboard interrupt detected...")
+        break
+    
+
+file.close()
+print("Program exitted...")
