@@ -30,40 +30,48 @@ try:
 except ValueError:
     print("Sensor not detected! Is an I2C device connected?")
 
-# Set up variables for plotting
-DAQRate = 10
+# # Set up variables for plotting
+DAQRate = 5
 xLen = 101 # 101 datapoints per plot
 yRange = [0, 100] # Y range from 0 to 100mm
 
 # Set up plot graph
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
+ax.set_ylim(yRange)
 xs = list(np.linspace(0, DAQRate, xLen)) # x data (time)
 ys = [0] * xLen # y data (distance)
 
 line, = ax.plot(xs, ys) # unpack tuple to take first element only
 
-def animate(i, ys):
-    range = sensor.range
-    
-    ys.append(range) # add to plot
-    ys = ys[-xLen:] # limit y data
-    
-    line.set_ydata(ys)
-    
-    return line
+plt.title("VL6180X Distance vs Time")
+plt.xlabel("Time (s)")
+plt.ylabel("Distance (mm)")
 
-animashun = animation.FuncAnimation(fig, animate, fargs = (ys,), interval = 50, blit = True)
-plt.show()
-
-"""
-try:
+try: 
     while True:
-        range = sensor.range
-        lums = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_1)
-        print("Range: {0}mm\t Light: {0}lux".format(range, lums), end = "\r")
-        
-        time.sleep(1/DAQRate) # 10 Hz DAQ rate
+        def animate(i, ys):
+            range = sensor.range
+            
+            ys.append(range) # add to plot
+            ys = ys[-xLen:] # limit y data
+            
+            line.set_ydata(ys)
+            
+            return line,
+
+        animashun = animation.FuncAnimation(fig, animate, fargs = (ys,), interval = 50, blit = True)
+        plt.grid()
+        plt.show()
 except KeyboardInterrupt:
-    print("\nKeyboard interrupt detected, stopping readings...")
-"""
+    print ("\nKeyboard interrupt detected...")
+
+# try:
+#     while True:
+#         range = sensor.range
+#         lums = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_1)
+#         print("Range: {0}mm\t Light: {0}lux".format(range, lums), end = "\r")
+        
+#         # time.sleep(1/DAQRate) # 10 Hz DAQ rate
+# except KeyboardInterrupt:
+#     print("\nKeyboard interrupt detected, stopping readings...")
