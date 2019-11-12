@@ -52,7 +52,7 @@ try:
     while True:
         def animate(i, ys):
             range = sensor.range
-            
+            print("Range: {0}mm".format(range), end = '\r')
             ys.append(range) # add to plot
             ys = ys[-xLen:] # limit y data
             
