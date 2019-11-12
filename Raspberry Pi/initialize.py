@@ -1,4 +1,6 @@
-# import pandas as pd
+"""
+Run this code first to verify that the Pi is capable of communicating with the sensor.
+"""
 
 import board
 import digitalio
@@ -24,4 +26,4 @@ try:
     sensor = adafruit_vl6180x.VL6180X(i2c) # link to I2C
     print("VL6180X ok!")
 except ValueError:
-    print("No I2C device connected!")
+    print("Sensor not detected! Is an I2C device connected?")
