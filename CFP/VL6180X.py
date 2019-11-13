@@ -33,7 +33,7 @@ except ValueError:
     sys.exit() # exit program
 
 # Set up variables for plotting
-timeSpan = 5 # time span for plotting, 0 to 5 seconds
+timeSpan = 5 # time span for plotting, relative b/c not RTOS
 xLen = 101 # 101 datapoints per plot
 yRange = [0, 100] # Y range from 0 to 100mm
 
@@ -45,13 +45,13 @@ xs = list(np.linspace(0, timeSpan, xLen)) # x data (time)
 ys = [0] * xLen # y data (distance)
 line, = ax.plot(xs, ys) # unpack tuple to take first element only
 plt.title("VL6180X Distance vs Time")
-plt.xlabel("Time (s)")
+plt.xlabel("Time (relative)")
 plt.ylabel("Distance (mm)")
 
 # Prepare CSV for datalogging
-currentDT = datetime.datetime.now()
+currentDT = datetime.now()
 file = open("DistanceTest_" + currentDT.strftime("%Y_%m_%d_%H_%M_%S") + ".txt", "w")
-file.write("Time" + "\t" + "Distance" + "\t" + "Lumens")
+file.write("Time" + "\t" + "Distance" + "\t" + "Lumens (0dB)")
 
 # Main try/except while loop for animations and data updating
 startTime = time.time()
@@ -61,6 +61,11 @@ while True:
             range = sensor.range
             lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_5) # default gain_5 suggestion
             print("Range: {0}mm\t Light: {0}lux".format(range, lumens), end = '\r') # '\r' line ending to dynamically write on one line
+
+            # Write to file
+            endTime = time.time()
+            elapsed = endTime - startTime
+            file.write("\n" + "{0:.2f}".format(elapsed) + "\t" + str(range) + "\t\t" + "{0:.2f}".format(lumens))
 
             ys.append(range) # add to plot
             ys = ys[-xLen:] # limit y data
@@ -72,12 +77,12 @@ while True:
         animashun = animation.FuncAnimation(fig, animate, fargs = (ys,), interval = 50, blit = True)
         plt.grid()
         plt.show()
-        
-        # Write to file
-        endTime = time.time()
-        file.write("\n" + (endTime - startTime) + "\t" + range + "\t" + lumens)
+
+    except AttributeError:
+        print("Program stopped due to unknown reason...")
+        break
     except KeyboardInterrupt:
-        print ("\nKeyboard interrupt detected...")
+        print("\nKeyboard interrupt detected...")
         break
     
 
