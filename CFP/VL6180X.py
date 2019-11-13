@@ -51,7 +51,7 @@ plt.ylabel("Distance (mm)")
 # Prepare CSV for datalogging
 currentDT = datetime.now()
 file = open("DistanceTest_" + currentDT.strftime("%Y_%m_%d_%H_%M_%S") + ".txt", "w")
-file.write("Time" + "\t" + "Distance" + "\t" + "Lumens (0dB)")
+file.write("Time (s)" + "\t" + "Range (mm)" + "\t" + "Lumens (0dB)")
 
 # Main try/except while loop for animations and data updating
 startTime = time.time()
@@ -65,7 +65,7 @@ while True:
             # Write to file
             endTime = time.time()
             elapsed = endTime - startTime
-            file.write("\n" + "{0:.2f}".format(elapsed) + "\t" + str(range) + "\t\t" + "{0:.2f}".format(lumens))
+            file.write("\n" + "{0:.2f}".format(elapsed) + "\t\t" + str(range) + "\t\t" + "{0:.2f}".format(lumens))
 
             ys.append(range) # add to plot
             ys = ys[-xLen:] # limit y data
