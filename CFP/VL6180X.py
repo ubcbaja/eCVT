@@ -35,7 +35,7 @@ except ValueError:
 # Set up variables for plotting
 timeSpan = 5 # time span for plotting, relative b/c not RTOS
 xLen = 101 # 101 datapoints per plot
-yRange = [0, 150] # Y range from 0 to 100mm
+yRange = [0, 150] # Y range from 0 to 150mm
 
 # Set up plot graph
 fig = plt.figure()
@@ -49,7 +49,7 @@ plt.xlabel("Time (relative)")
 plt.ylabel("Distance (mm)")
 plt.yticks(np.arange(0, 150, step = 10)) # doesn't work need fix
 
-# Prepare CSV for datalogging
+# Prepare TXT for datalogging
 currentDT = datetime.now()
 file = open("DistanceTest_" + currentDT.strftime("%Y_%m_%d_%H_%M_%S") + ".txt", "w")
 file.write("Time (s)" + "\t" + "Range (mm)" + "\t" + "Lumens (0dB)")
@@ -60,7 +60,7 @@ while True:
     try:
         def animate(i, ys):
             range = sensor.range
-            lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_20) # default gain_5 suggestion
+            lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_20) # default gain_20
             print("Range: {0}mm\t Light: {0}lux".format(range, lumens), end = '\r') # '\r' line ending to dynamically write on one line
 
             # Write to file
