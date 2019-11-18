@@ -56,7 +56,7 @@ file.write("Time (s)" + "\t" + "Range (mm)" + "\t" + "Lumens (0dB)")
 
 # Main try/except while loop for animations and data updating
 startTime = time.time()
-while True: 
+while True:
     try:
         def animate(i, ys):
             range = sensor.range
@@ -71,7 +71,7 @@ while True:
             ys.append(range) # add to plot
             ys = ys[-xLen:] # limit y data
             line.set_ydata(ys)
-            
+
             return line,
 
         # Use blit to speed things up
@@ -87,14 +87,12 @@ while True:
         # elapsed = endTime - startTime
         # file.write("\n" + "{0:.2f}".format(elapsed) + "\t\t" + str(range) + "\t\t" + "{0:.2f}".format(lumens))
 
-
     except AttributeError:
         print("Program stopped due to unknown reason...")
         break
     except KeyboardInterrupt:
         print("\nKeyboard interrupt detected...")
         break
-    
 
 file.close()
 print("Program exitted...")
