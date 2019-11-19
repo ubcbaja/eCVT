@@ -35,7 +35,7 @@ except ValueError:
 # Set up variables for plotting
 timeSpan = 5 # time span for plotting, relative b/c not RTOS
 xLen = 101 # 101 datapoints per plot
-yRange = [50, 100] # Y range from 0 to 150mm
+yRange = [20, 70] # Y range from 0 to 150mm
 
 # Set up plot graph
 fig = plt.figure()
@@ -47,7 +47,7 @@ line, = ax.plot(xs, ys) # unpack tuple to take first element only
 plt.title("VL6180X Distance vs Time")
 plt.xlabel("Time (relative)")
 plt.ylabel("Distance (mm)")
-plt.yticks(np.arange(50, 100, step = 2)) # doesn't work need fix
+plt.yticks(np.arange(20, 70, step = 2))
 
 # Prepare TXT for datalogging
 currentDT = datetime.now()
@@ -88,11 +88,13 @@ while True:
         # file.write("\n" + "{0:.2f}".format(elapsed) + "\t\t" + str(range) + "\t\t" + "{0:.2f}".format(lumens))
 
     except AttributeError:
-        print("Program stopped due to unknown reason...")
+        print("Program stopped...")
         break
     except KeyboardInterrupt:
         print("\nKeyboard interrupt detected...")
         break
+    except OSError:
+        print("\nProgram stopped check wiring...")
 
 file.close()
 print("Program exitted...")
