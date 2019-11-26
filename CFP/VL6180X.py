@@ -52,7 +52,7 @@ plt.yticks(np.arange(20, 70, step = 2))
 # Prepare TXT for datalogging
 currentDT = datetime.now()
 file = open("DistanceTest_" + currentDT.strftime("%Y_%m_%d_%H_%M_%S") + ".txt", "w")
-file.write("Time (s)" + "Range (mm)" + "Lumens (0dB)")
+file.write("Time (s)" + "\t" + "Range (mm)" + "\t" + "Lumens (0dB)")
 
 # Main try/except while loop for animations and data updating
 startTime = time.time()
