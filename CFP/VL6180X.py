@@ -66,7 +66,7 @@ while True:
             # Write to file
             endTime = time.time()
             elapsed = endTime - startTime
-            file.write("\n" + "{0:.2f}".format(elapsed) + "\t\t" + str(range) + "\t\t" + "{0:.2f}".format(lumens))
+            file.write("\n" + "{0:.2f}".format(elapsed) + "\t" + str(range) + "\t" + "{0:.2f}".format(lumens))
 
             ys.append(range) # add to plot
             ys = ys[-xLen:] # limit y data
