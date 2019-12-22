@@ -20,6 +20,7 @@ def SetPosition(position, PWMpin, p):
         return False
     else:
         duty = mapVal(position, (0, 20), (3.6, 9.2))
+        print("Duty cycle is: " + duty)
         GPIO.output(PWMpin, True)
         p.ChangeDutyCycle(duty)
         sleep(1)
