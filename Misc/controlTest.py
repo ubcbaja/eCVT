@@ -24,10 +24,11 @@ import time
 import os
 import sys
 
+range = 0
+flag = 0
 PWMpin = 26
 GPIO.setmode(GPIO.BCM) # auto board or BCM pinout config
 GPIO.setup(PWMpin, GPIO.OUT) # set pin to be output (for PWM)
-
 p = GPIO.PWM(PWMpin, 50) # 50Hz
 p.start(0)
 
@@ -43,7 +44,12 @@ except ValueError:
 
 while True:
     try:
-        range = sensor.range
+        if flag == 0:
+            prevRange = sensor.range
+            flag = 1
+        else:
+            prevRange = range
+        range = (sensor.range + prevRange) / 2
         lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_20) # default gain_20
         range2 = range - 10
         if range2 > 20:
