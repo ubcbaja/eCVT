@@ -35,7 +35,7 @@ except ValueError:
 # Set up variables for plotting
 timeSpan = 5 # time span for plotting, relative b/c not RTOS
 xLen = 101 # 101 datapoints per plot
-yRange = [20, 70] # Y range from 0 to 150mm
+yRange = [0, 40] # Y range from 0 to 30mm
 
 # Set up plot graph
 fig = plt.figure()
@@ -47,7 +47,7 @@ line, = ax.plot(xs, ys) # unpack tuple to take first element only
 plt.title("VL6180X Distance vs Time")
 plt.xlabel("Time (relative)")
 plt.ylabel("Distance (mm)")
-plt.yticks(np.arange(20, 70, step = 2))
+plt.yticks(np.arange(0, 40, step = 2))
 
 # Prepare TXT for datalogging
 currentDT = datetime.now()
@@ -60,7 +60,7 @@ while True:
     try:
         def animate(i, ys):
             range = sensor.range
-            lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_5) # default gain_20
+            lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_20) # default gain_20
             print("Range: {0}mm\t Light: {0}lux".format(range, lumens), end = '\r') # '\r' line ending to dynamically write on one line
 
             # Write to file
@@ -95,6 +95,7 @@ while True:
         break
     except OSError:
         print("\nProgram stopped check wiring...")
+        break
 
 file.close()
 print("Program exitted...")

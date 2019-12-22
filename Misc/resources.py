@@ -1,5 +1,14 @@
 import RPi.GPIO as GPIO
 from time import sleep
+import resources
+import board
+import digitalio
+import busio
+import adafruit_vl6180x
+import numpy as np
+import time
+import os
+import sys
 
 # Set rotary servo angle between 0 and 90 degrees
 def SetAngle(angle, PWMpin, p):

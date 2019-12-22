@@ -15,19 +15,50 @@ Sauces:
 import RPi.GPIO as GPIO
 from time import sleep
 import resources
+import board
+import digitalio
+import busio
+import adafruit_vl6180x
+import numpy as np
+import time
+import os
+import sys
 
-PWMpin = 37
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(PWMpin, GPIO.OUT)
+PWMpin = 26
+GPIO.setmode(GPIO.BCM) # auto board or BCM pinout config
+GPIO.setup(PWMpin, GPIO.OUT) # set pin to be output (for PWM)
+
 p = GPIO.PWM(PWMpin, 50) # 50Hz
 p.start(0)
 
+# Configure I2C port
+i2c = busio.I2C(board.SCL, board.SDA)
+
+# Create sensor object
+try:
+    sensor = adafruit_vl6180x.VL6180X(i2c) # link to I2C
+except ValueError:
+    print("Sensor not detected! Is an I2C device connected?")
+    sys.exit() # exit program
+
 while True:
     try:
-        print("Enter command input between 0 and 20(mm):\n", end = "\r")
+        range = sensor.range
+        lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_20) # default gain_20
+        # print("Range: {0}mm".format(range), end = '\r') # '\r' line ending to dynamically write on one line
+
+        print("Range: {0}mm\tEnter command input between 0 and 20(mm):".format(range), end = "\r")
+
         resources.SetPosition(float(input()), PWMpin, p)
+
+    except AttributeError:
+        print("Program stopped...")
+        break
     except KeyboardInterrupt:
-        print("\nStopping program...")
+        print("\nKeyboard interrupt detected...")
+        break
+    except OSError:
+        print("\nProgram stopped check wiring...")
         break
 
 print("Program complete")
