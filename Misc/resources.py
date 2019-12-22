@@ -34,7 +34,7 @@ def SetPosition(position, PWMpin, p):
             print("Duty cycle is: " + str(duty))
             GPIO.output(PWMpin, True)
             p.ChangeDutyCycle(duty)
-            sleep(1)
+            sleep(0.5)
             GPIO.output(PWMpin, False)
             p.ChangeDutyCycle(0)
             return True
