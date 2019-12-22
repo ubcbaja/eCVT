@@ -25,7 +25,7 @@ p.start(0)
 while True:
     try:
         print("Enter command input between 0 and 20(mm):\n", end = "\r")
-        resources.SetPosition(input(), PWMpin, p)
+        resources.SetPosition(float(input()), PWMpin, p)
     except KeyboardInterrupt:
         print("\nStopping program...")
         break
