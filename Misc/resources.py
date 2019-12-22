@@ -1,3 +1,6 @@
+import RPi.GPIO as GPIO
+from time import sleep
+
 # Set rotary servo angle between 0 and 90 degrees
 def SetAngle(angle):
     if angle < 0 or angle > 90:
