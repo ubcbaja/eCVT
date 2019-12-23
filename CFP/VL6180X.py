@@ -32,6 +32,9 @@ except ValueError:
     print("Sensor not detected! Is an I2C device connected?")
     sys.exit() # exit program
 
+# Init array for data to write
+dataArr = []
+
 # Set up variables for plotting
 timeSpan = 5 # time span for plotting, relative b/c not RTOS
 xLen = 101 # 101 datapoints per plot
@@ -49,11 +52,6 @@ plt.xlabel("Time (relative)")
 plt.ylabel("Distance (mm)")
 plt.yticks(np.arange(0, 40, step = 2))
 
-# Prepare TXT for datalogging
-currentDT = datetime.now()
-file = open("DistanceTest_" + currentDT.strftime("%Y_%m_%d_%H_%M_%S") + ".txt", "w")
-file.write("Time (s)" + "\t" + "Range (mm)" + "\t" + "Lumens (0dB)")
-
 # Main try/except while loop for animations and data updating
 startTime = time.time()
 while True:
@@ -61,12 +59,12 @@ while True:
         def animate(i, ys):
             range = sensor.range
             lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_20) # default gain_20
-            print("Range: {0}mm\t Light: {0}lux".format(range, lumens), end = '\r') # '\r' line ending to dynamically write on one line
+            print("Range: {0}mm\t Light: {1}lux".format(range, lumens), end = '\r') # '\r' line ending to dynamically write on one line
 
-            # Write to file
+            # Write to array then to file
             endTime = time.time()
             elapsed = endTime - startTime
-            file.write("\n" + "{0:.2f}".format(elapsed) + "\t" + str(range) + "\t" + "{0:.2f}".format(lumens))
+            dataArr.append([elapsed, range, lumens])
 
             ys.append(range) # add to plot
             ys = ys[-xLen:] # limit y data
@@ -97,5 +95,14 @@ while True:
         print("\nProgram stopped check wiring...")
         break
 
-file.close()
+dataArr = np.asarray(dataArr)
+np.around(dataArr, decimals = 2)
+
+# Prepare TXT for datalogging
+currentDT = datetime.now()
+fileName = "DistanceTest_" + currentDT.strftime("%Y_%m_%d_%H_%M_%S") + ".csv"
+np.savetxt(fileName, dataArr, delimiter = ",")
+
+# file.write("Time (s)" + "\t" + "Range (mm)" + "\t" + "Lumens (0dB)")
+
 print("Program exitted...")
