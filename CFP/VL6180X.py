@@ -21,6 +21,7 @@ import sys
 from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import pandas as pd
 
 # Configure I2C port
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -34,7 +35,7 @@ except ValueError:
 
 # Init array for data to write
 dataArr = []
-dataArr.append(["Time (s)", "Range (mm)", "Lumens (0dB)"]) # title row
+# dataArr.append(["Time (s)", "Range (mm)", "Lumens (0dB)"]) # title row
 
 # Set up variables for plotting
 timeSpan = 5 # time span for plotting, relative b/c not RTOS
@@ -60,11 +61,11 @@ while True:
         def animate(i, ys):
             range = sensor.range
             lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_20) # default gain_20
-            print("Range: {0}mm\t Light: {1}lux".format(range, lumens), end = '\r') # '\r' line ending to dynamically write on one line
+            print("Range: {0}mm\t Light: {1:.2f}lux".format(range, lumens), end = '\r') # '\r' line ending to dynamically write on one line
 
             # Write to array then to file
             endTime = time.time()
-            elapsed = endTime - startTime
+            elapsed = round((endTime - startTime), 3)
             dataArr.append([elapsed, range, lumens])
 
             ys.append(range) # add to plot
@@ -96,12 +97,13 @@ while True:
         print("\nProgram stopped check wiring...")
         break
 
+# Wrangle data into dataframe (for row titles)
 dataArr = np.asarray(dataArr)
-np.around(dataArr, decimals = 2)
+dfData = pd.DataFrame({'Time (s)': dataArr[:, 0], 'Range (mm)': dataArr[:, 1], 'Lumens (0dB)': dataArr[:, 2]}, columns = ['Time (s)', 'Range (mm)', 'Lumens (0dB)'])
 
-# Prepare TXT for datalogging
+# Save CSV for datalogging
 currentDT = datetime.now()
 fileName = "DistanceTest_" + currentDT.strftime("%Y_%m_%d_%H_%M_%S") + ".csv"
-np.savetxt(fileName, dataArr, delimiter = ",")
+dfData.to_csv(fileName, index = False, header = True)
 
 print("Program exitted...")
