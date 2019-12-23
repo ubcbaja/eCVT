@@ -33,3 +33,4 @@ void CheckErrors(uint8_t status) {
         Serial.println("Range reading overflow");
     }
 }
+
