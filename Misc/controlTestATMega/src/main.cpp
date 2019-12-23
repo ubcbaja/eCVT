@@ -23,14 +23,13 @@ void setup() {
 
 void loop() {
   float lux = vl.readLux(VL6180X_ALS_GAIN_5);
-
-  Serial.print("Lux: "); Serial.println(lux);
   
   uint8_t range = vl.readRange();
   uint8_t status = vl.readRangeStatus();
 
   if (status == VL6180X_ERROR_NONE) {
-    Serial.print("Range: "); Serial.println(range);
+    Serial.print("Range:\t"); Serial.print(range);
+    Serial.print("\tLux:\t"); Serial.println(lux);
   }
 
   // // Some error occurred, print it out!
