@@ -35,7 +35,6 @@ except ValueError:
 
 # Init array for data to write
 dataArr = []
-# dataArr.append(["Time (s)", "Range (mm)", "Lumens (0dB)"]) # title row
 
 # Set up variables for plotting
 timeSpan = 5 # time span for plotting, relative b/c not RTOS
