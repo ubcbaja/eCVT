@@ -45,10 +45,6 @@ while True:
         range = sensor.range
         lumens = sensor.read_lux(adafruit_vl6180x.ALS_GAIN_20) # default gain_20
         range2 = range - 10
-        if range2 > 20:
-            range2 = 20
-        elif range2 < 0:
-            range2 = 0
 
         print("Sensor range: {0}mm\tCommand range: {1}mm".format(range, range2))
         resources.SetPosition(float(range2), PWMpin, p)
