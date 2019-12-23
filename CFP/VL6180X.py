@@ -34,6 +34,7 @@ except ValueError:
 
 # Init array for data to write
 dataArr = []
+dataArr.append(["Time (s)", "Range (mm)", "Lumens (0dB)"]) # title row
 
 # Set up variables for plotting
 timeSpan = 5 # time span for plotting, relative b/c not RTOS
@@ -102,7 +103,5 @@ np.around(dataArr, decimals = 2)
 currentDT = datetime.now()
 fileName = "DistanceTest_" + currentDT.strftime("%Y_%m_%d_%H_%M_%S") + ".csv"
 np.savetxt(fileName, dataArr, delimiter = ",")
-
-# file.write("Time (s)" + "\t" + "Range (mm)" + "\t" + "Lumens (0dB)")
 
 print("Program exitted...")
