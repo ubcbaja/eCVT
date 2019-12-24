@@ -12,6 +12,7 @@
 
 Adafruit_VL6180X vl = Adafruit_VL6180X();
 int PWMPin = 3;
+int analogInPin = A0;
 Servo linearServo; // create servo instance
 unsigned long command = 0;
 unsigned long start, finish, elapsed;
@@ -29,19 +30,11 @@ void setup() {
   Serial.println("Sensor found!");
 
   linearServo.attach(PWMPin);
+  // pinMode(PWMPin, OUTPUT);
   Serial.println("Servo attached!");
 
   start = millis(); // time in microseconds
 }
-
-// void loop() {
-//   uint8_t status = vl.readRangeStatus();
-
-//   CheckErrors(status);
-//   linearServo.write(180);
-//   Serial.println("Command");
-//   delay(100);
-// }
 
 void loop() {
   float lux = vl.readLux(VL6180X_ALS_GAIN_20);
@@ -52,22 +45,20 @@ void loop() {
   if (status == VL6180X_ERROR_NONE) {
     if (range < 10)
       range = 10;
-    else if (range > 30)
-      range = 30;
+    else if (range > 50)
+      range = 50;
 
-  command = map(range, 10, 30, 180, 0);
+  command = map(range, 10, 50, 140, 40);
+  // command = map(analogRead(analogInPin), 0, 1023, 40, 140); // for analog input
+  // analogWrite(PWMPin, command);
   linearServo.write(command);
 
   finish = millis();
   elapsed = finish - start;
 
   Serial.print("Time: "); Serial.print(elapsed); Serial.print("\tRange: "); Serial.print(range); Serial.print("\tCommand: "); Serial.println(command);
-  
-  // Serial.print("Range:\t"); Serial.println(range);
-  // Serial.print("\tLux:\t"); Serial.println(lux);
   }
 
   // Some error occurred, print it out!
   CheckErrors(status);
-  delay(50);
 }
