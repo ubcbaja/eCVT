@@ -30,25 +30,35 @@ void setup() {
 
   linearServo.attach(PWMPin);
   Serial.println("Servo attached!");
+
+  start = millis(); // time in microseconds
 }
 
+// void loop() {
+//   uint8_t status = vl.readRangeStatus();
+
+//   CheckErrors(status);
+//   linearServo.write(180);
+//   Serial.println("Command");
+//   delay(100);
+// }
+
 void loop() {
-  start = micros(); // time in microseconds
   float lux = vl.readLux(VL6180X_ALS_GAIN_20);
   
   uint8_t range = vl.readRange();
   uint8_t status = vl.readRangeStatus();
 
   if (status == VL6180X_ERROR_NONE) {
-    if (range < 0)
-      range = 0;
-    else if (range > 20)
-      range = 20;
+    if (range < 10)
+      range = 10;
+    else if (range > 30)
+      range = 30;
 
-  command = map(range, 0, 20, 0, 180);
+  command = map(range, 10, 30, 180, 0);
   linearServo.write(command);
 
-  finish = micros();
+  finish = millis();
   elapsed = finish - start;
 
   Serial.print("Time: "); Serial.print(elapsed); Serial.print("\tRange: "); Serial.print(range); Serial.print("\tCommand: "); Serial.println(command);
@@ -59,4 +69,5 @@ void loop() {
 
   // Some error occurred, print it out!
   CheckErrors(status);
+  delay(50);
 }
