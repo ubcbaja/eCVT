@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'ArduinoTest'.
  *
- * Model version                  : 1.2
+ * Model version                  : 1.12
  * Simulink Coder version         : 9.1 (R2019a) 23-Nov-2018
- * C/C++ source code generated on : Sun Jan 19 22:37:41 2020
+ * C/C++ source code generated on : Sun Jan 19 23:59:09 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR
@@ -22,7 +22,7 @@
 #include "rtwtypes.h"
 #include "multiword_types.h"
 
-/* Custom Type definition for MATLABSystem: '<Root>/Analog Input' */
+/* Custom Type definition for MATLABSystem: '<Root>/Analog Input1' */
 #include "MW_SVD.h"
 #ifndef typedef_codertarget_arduinobase_block_T
 #define typedef_codertarget_arduinobase_block_T

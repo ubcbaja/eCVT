@@ -2,7 +2,7 @@
 ## Makefile generated for Simulink model 'ArduinoTest'. 
 ## 
 ## Makefile     : ArduinoTest.mk
-## Generated on : Sun Jan 19 22:36:51 2020
+## Generated on : Sun Jan 19 22:42:12 2020
 ## MATLAB Coder version: 4.2 (R2019a)
 ## 
 ## Build Info:

@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'ArduinoTest'.
  *
- * Model version                  : 1.2
+ * Model version                  : 1.12
  * Simulink Coder version         : 9.1 (R2019a) 23-Nov-2018
- * C/C++ source code generated on : Sun Jan 19 22:37:41 2020
+ * C/C++ source code generated on : Sun Jan 19 23:59:09 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR
@@ -92,24 +92,29 @@
 
 /* Block signals (default storage) */
 typedef struct {
-  real_T DiscretePulseGenerator;       /* '<Root>/Discrete Pulse Generator' */
+  uint16_T AnalogInput1;               /* '<Root>/Analog Input1' */
   uint16_T AnalogInput;                /* '<Root>/Analog Input' */
 } B_ArduinoTest_T;
 
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
-  codertarget_arduinobase_inter_T obj; /* '<Root>/Analog Input' */
+  codertarget_arduinobase_inter_T obj; /* '<Root>/Analog Input1' */
+  codertarget_arduinobase_inter_T obj_l;/* '<Root>/Analog Input' */
+  codertarget_arduinobase_block_T obj_n;/* '<S5>/Digital Output' */
+  codertarget_arduinobase_block_T obj_g;/* '<S4>/Digital Output' */
+  codertarget_arduinobase_block_T obj_d;/* '<S3>/Digital Output' */
+  codertarget_arduinobase_block_T obj_i;/* '<S2>/Digital Output' */
   codertarget_arduinobase_block_T obj_j;/* '<S1>/Digital Output' */
-  e_codertarget_arduinobase_int_T gobj_0;/* '<Root>/Analog Input' */
-  e_codertarget_arduinobase_int_T gobj_1;/* '<Root>/Analog Input' */
-  e_codertarget_arduinobase_int_T gobj_2;/* '<Root>/Analog Input' */
-  e_codertarget_arduinobase_int_T gobj_3;/* '<Root>/Analog Input' */
+  e_codertarget_arduinobase_int_T gobj_0;/* '<Root>/Analog Input1' */
+  e_codertarget_arduinobase_int_T gobj_1;/* '<Root>/Analog Input1' */
+  e_codertarget_arduinobase_int_T gobj_2;/* '<Root>/Analog Input1' */
+  e_codertarget_arduinobase_int_T gobj_3;/* '<Root>/Analog Input1' */
+  e_codertarget_arduinobase_int_T gobj_0_n;/* '<Root>/Analog Input' */
+  e_codertarget_arduinobase_int_T gobj_1_i;/* '<Root>/Analog Input' */
+  e_codertarget_arduinobase_int_T gobj_2_h;/* '<Root>/Analog Input' */
+  e_codertarget_arduinobase_int_T gobj_3_j;/* '<Root>/Analog Input' */
   struct {
-    void *LoggedData;
-  } Scope1_PWORK;                      /* '<Root>/Scope1' */
-
-  struct {
-    void *LoggedData;
+    void *LoggedData[2];
   } Scope_PWORK;                       /* '<Root>/Scope' */
 
   int32_T clockTickCounter;            /* '<Root>/Discrete Pulse Generator' */
@@ -120,10 +125,25 @@ struct P_ArduinoTest_T_ {
   real_T AnalogInput_SampleTime;       /* Expression: 0.01
                                         * Referenced by: '<Root>/Analog Input'
                                         */
+  real_T AnalogInput1_SampleTime;      /* Expression: 0.01
+                                        * Referenced by: '<Root>/Analog Input1'
+                                        */
   real_T DigitalOutput_Protocol;       /* Expression: 0
                                         * Referenced by: '<S1>/Digital Output'
                                         */
-  real_T DiscretePulseGenerator_Amp;   /* Expression: 1
+  real_T DigitalOutput_Protocol_l;     /* Expression: 0
+                                        * Referenced by: '<S2>/Digital Output'
+                                        */
+  real_T DigitalOutput_Protocol_a;     /* Expression: 0
+                                        * Referenced by: '<S3>/Digital Output'
+                                        */
+  real_T DigitalOutput_Protocol_h;     /* Expression: 0
+                                        * Referenced by: '<S4>/Digital Output'
+                                        */
+  real_T DigitalOutput_Protocol_o;     /* Expression: 0
+                                        * Referenced by: '<S5>/Digital Output'
+                                        */
+  real_T DiscretePulseGenerator_Amp;   /* Expression: 0
                                         * Referenced by: '<Root>/Discrete Pulse Generator'
                                         */
   real_T DiscretePulseGenerator_Period;
@@ -220,6 +240,11 @@ extern RT_MODEL_ArduinoTest_T *const ArduinoTest_M;
  *
  * '<Root>' : 'ArduinoTest'
  * '<S1>'   : 'ArduinoTest/Digital Output'
+ * '<S2>'   : 'ArduinoTest/Digital Output1'
+ * '<S3>'   : 'ArduinoTest/Digital Output2'
+ * '<S4>'   : 'ArduinoTest/Digital Output3'
+ * '<S5>'   : 'ArduinoTest/Digital Output4'
+ * '<S6>'   : 'ArduinoTest/MATLAB Function'
  */
 #endif                                 /* RTW_HEADER_ArduinoTest_h_ */
 

@@ -5,8 +5,8 @@ avrdude: NOTE: "flash" memory has been specified, an erase cycle will be perform
          To disable this feature, specify the -D option.
 avrdude: erasing chip
 avrdude: reading input file "../ArduinoTest.hex"
-avrdude: writing flash (20230 bytes):
-avrdude: 20230 bytes of flash written
+avrdude: writing flash (21180 bytes):
+avrdude: 21180 bytes of flash written
 
 avrdude done.  Thank you.
 
