@@ -1,0 +1,7 @@
+-ID:\Documents\GitHub\eCVT\Controls
+-IC:\ProgramData\MATLAB\SupportPackages\R2019a\toolbox\target\supportpackages\arduinobase\include
+-ID:\Documents\GitHub\eCVT\Controls\ArduinoTest_grt_rtw
+-I"D:\MATLAB 2019\extern\include"
+-I"D:\MATLAB 2019\simulink\include"
+-I"D:\MATLAB 2019\rtw\c\src"
+-I"D:\MATLAB 2019\rtw\c\src\ext_mode\common"
