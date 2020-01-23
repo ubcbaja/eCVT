@@ -9,7 +9,7 @@
  *
  * Model version                  : 1.12
  * Simulink Coder version         : 9.1 (R2019a) 23-Nov-2018
- * C/C++ source code generated on : Sun Jan 19 23:59:09 2020
+ * C/C++ source code generated on : Tue Jan 21 09:32:19 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR
@@ -301,10 +301,10 @@ void ArduinoTest_initialize(void)
   ArduinoTest_M->Timing.stepSize0 = 0.01;
 
   /* External mode info */
-  ArduinoTest_M->Sizes.checksums[0] = (2800686061U);
-  ArduinoTest_M->Sizes.checksums[1] = (1376655369U);
-  ArduinoTest_M->Sizes.checksums[2] = (2550940591U);
-  ArduinoTest_M->Sizes.checksums[3] = (3288274118U);
+  ArduinoTest_M->Sizes.checksums[0] = (2274660775U);
+  ArduinoTest_M->Sizes.checksums[1] = (2728079825U);
+  ArduinoTest_M->Sizes.checksums[2] = (4173527291U);
+  ArduinoTest_M->Sizes.checksums[3] = (3716461579U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
