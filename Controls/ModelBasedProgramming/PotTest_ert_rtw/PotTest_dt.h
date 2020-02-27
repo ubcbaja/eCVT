@@ -7,9 +7,9 @@
  *
  * Code generation for model "PotTest".
  *
- * Model version              : 1.28
+ * Model version              : 1.29
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C source code generated on : Tue Feb 25 16:20:45 2020
+ * C source code generated on : Wed Feb 26 15:36:19 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR

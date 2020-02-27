@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'PotTest'.
  *
- * Model version                  : 1.28
+ * Model version                  : 1.29
  * Simulink Coder version         : 9.1 (R2019a) 23-Nov-2018
- * C/C++ source code generated on : Tue Feb 25 16:20:45 2020
+ * C/C++ source code generated on : Wed Feb 26 15:36:19 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: Atmel->AVR
@@ -145,10 +145,10 @@ void PotTest_initialize(void)
   PotTest_M->Timing.stepSize0 = 0.001;
 
   /* External mode info */
-  PotTest_M->Sizes.checksums[0] = (3107858488U);
-  PotTest_M->Sizes.checksums[1] = (3121633732U);
-  PotTest_M->Sizes.checksums[2] = (1983720829U);
-  PotTest_M->Sizes.checksums[3] = (4200866433U);
+  PotTest_M->Sizes.checksums[0] = (2427025948U);
+  PotTest_M->Sizes.checksums[1] = (3746487163U);
+  PotTest_M->Sizes.checksums[2] = (1374225887U);
+  PotTest_M->Sizes.checksums[3] = (2196448037U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
