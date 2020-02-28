@@ -9,22 +9,23 @@
 #include <Wire.h>
 
 /* PWM ESC*/
-#define potPin A0
+#define inputPotPin A0
 #define motorPos 5
 #define motorNeg 6
 
 int potInput = 0;
-int command = 0;
+int difference = 0;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(potPin, INPUT);
+  pinMode(inputPotPin, INPUT);
   pinMode(motorPos, OUTPUT);
   pinMode(motorNeg, OUTPUT);
 }
 
 void loop() {
-  potInput = analogRead(potPin);
+  potInput = analogRead(inputPotPin);
+
   Serial.print("Pot input: "); Serial.println(potInput);
 
   if (potInput >= 524) {
@@ -46,21 +47,21 @@ void loop() {
 }
 
 /* RC ESC */
-// #define potPin A0
+// #define inputPotPin A0
 // #define sigPin 5
 
 // int potInput = 0;
 
 // void setup() {
 //   Serial.begin(9600);
-//   pinMode(potPin, INPUT);
+//   pinMode(inputPotPin, INPUT);
 //   pinMode(sigPin, OUTPUT);
 
 //   TCCR0B = TCCR0B & B11111000 | B00000101; // 60Hz clock for ~20ms (16ms) period for RC control
 // }
 
 // void loop() {
-//   potInput = map(analogRead(potPin), 0, 1023, 16, 32); // 16 is 1ms duty cycle, 32 is 2ms duty cycle
+//   potInput = map(analogRead(inputPotPin), 0, 1023, 16, 32); // 16 is 1ms duty cycle, 32 is 2ms duty cycle
 //   analogWrite(sigPin, potInput);
 //   Serial.print("Pot output:\t"); Serial.println(potInput);
 //   delay(10);
