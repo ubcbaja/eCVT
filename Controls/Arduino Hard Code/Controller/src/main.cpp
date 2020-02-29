@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#include <PID_v1.h>
 
 #define inputPotPin A0
 #define feedbackPotPin A1
@@ -15,8 +16,8 @@
 
 int potInput = 0;
 int potFeedback = 0;
-int difference = 0;
-int command = 0;
+int error = 0;
+int effort = 0;
 
 int Kp = 10;
 int Ki = 0;
@@ -34,24 +35,29 @@ void loop() {
   potInput = analogRead(inputPotPin);
   potFeedback = analogRead(feedbackPotPin);
 
-  difference = potInput - potFeedback;
+  error = potInput - potFeedback;
+  effort = error * Kp;
 
-  Serial.print("Pot input:\t"); Serial.print(potInput); Serial.print("\tPot feedback:\t"); Serial.print(potFeedback); 
-  Serial.print("\tError:\t"); Serial.println(difference);
+  Serial.print("Pot input: "); Serial.print(potInput); Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
+  Serial.print("\tError: "); Serial.print(error);  
 
-  if (difference > 10) {
-    analogWrite(motorPos, map(difference, 0, 1023, 0, 255));
+  if (error > 10) {
+    analogWrite(motorPos, map(effort, 0, 1023*Kp, 0, 255));
     analogWrite(motorNeg, 0);
+    Serial.print("\tCommand pos: "); Serial.println(map(effort, 0, 1023*Kp, 0, 255));
   }
 
-  else if (difference < -10) {
+  else if (error < -10) {
+    effort = -1 * effort;
     analogWrite(motorPos, 0);
-    analogWrite(motorNeg, map((1023 - difference), 0, 1023, 0, 255));
+    analogWrite(motorNeg, map(effort, 0, 1023*Kp, 0, 255));
+    Serial.print("\tCommand neg: "); Serial.println(map(effort, 0, 1023*Kp, 0, 255));
   }
 
   else {
     analogWrite(motorPos, 0);
     analogWrite(motorNeg, 0);
+    Serial.print("\tCommand: "); Serial.println("0");
   }
 
   delay(10);
