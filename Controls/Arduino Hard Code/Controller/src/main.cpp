@@ -1,64 +1,103 @@
 /*
   Objective of program is to control controls prototype motor through an ESC via potentiometer input with feedback
 
+  Sauce: https://github.com/jondolan/tutorials/blob/master/controls/PWMthroughPID/PID.ino 
+
   Raymond Yu
   28 February 2020
 */
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <PID_v1.h>
 
 #define inputPotPin A0
 #define feedbackPotPin A1
-#define motorPos 5
-#define motorNeg 6
+#define motorPosPin 5
+#define motorNegPin 6
 
-int potInput = 0;
+const uint32_t loopPeriodMillis = 10; // 10ms = 100hz
+
+const double Kp = 10;
+const double Ki = 0.01;
+const double Kd = 0.01;
+
+int potInput    = 0;
 int potFeedback = 0;
-int error = 0;
-int effort = 0;
 
-int Kp = 10;
-int Ki = 0;
-int Kd = 0;
+int32_t   error       = 0;
+int32_t   dError      = 0;
+int32_t   lastError   = 0;
+int32_t   errorSum    = 0;
+uint32_t  lastMillis  = 0;
+uint32_t  printMillis = 0;
+
+double effort = 0;
+
+void PID(void);
+void motorForward(void);
+void motorBackward(void);
+void motorStop(void);
 
 void setup() {
   Serial.begin(9600);
   pinMode(inputPotPin, INPUT);
   pinMode(feedbackPotPin, INPUT);
-  pinMode(motorPos, OUTPUT);
-  pinMode(motorNeg, OUTPUT);
+  pinMode(motorPosPin, OUTPUT);
+  pinMode(motorNegPin, OUTPUT);
 }
 
 void loop() {
-  potInput = analogRead(inputPotPin);
-  potFeedback = analogRead(feedbackPotPin);
 
-  error = potInput - potFeedback;
-  effort = error * Kp;
+  PID();
 
-  Serial.print("Pot input: "); Serial.print(potInput); Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
-  Serial.print("\tError: "); Serial.print(error);  
+}
 
-  if (error > 10) {
-    analogWrite(motorPos, map(effort, 0, 1023*Kp, 0, 255));
-    analogWrite(motorNeg, 0);
-    Serial.print("\tCommand pos: "); Serial.println(map(effort, 0, 1023*Kp, 0, 255));
+void PID() {
+  // Deploy PID every loop period time (can also use timer interrupt)
+  if (millis()- lastMillis > loopPeriodMillis) {
+    lastMillis = millis(); // reset time
+
+    potInput = analogRead(inputPotPin);
+    potFeedback = analogRead(feedbackPotPin);
+    error = potInput - potFeedback;
+
+    // Stop motor if error too small
+    if ((error < 10) && (error > -10)) {
+      motorStop();
+      return;
+    }
+
+    // Serial.print("Pot input: "); Serial.print(potInput); 
+    // Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
+    // Serial.print("\tError: "); Serial.println(error); 
+
+    dError = error - lastError;
+    errorSum += error; // accumulate error
+    effort = (Kp * error) + (Ki * errorSum) + (Kd * dError);
+    lastError = error; // reset error
+
+    // Serial.print("dError: "); Serial.print(dError); 
+    // Serial.print("\t Error sum: "); Serial.print(errorSum);
+    // Serial.print("\t Effort: "); Serial.println(effort);
+
+    if (potFeedback < potInput)
+      motorForward();
+    if (potFeedback > potInput)
+      motorBackward();
   }
+}
 
-  else if (error < -10) {
-    effort = -1 * effort;
-    analogWrite(motorPos, 0);
-    analogWrite(motorNeg, map(effort, 0, 1023*Kp, 0, 255));
-    Serial.print("\tCommand neg: "); Serial.println(map(effort, 0, 1023*Kp, 0, 255));
-  }
+void motorForward() {
+  digitalWrite(motorPosPin, HIGH);
+  digitalWrite(motorNegPin, LOW);
+}
 
-  else {
-    analogWrite(motorPos, 0);
-    analogWrite(motorNeg, 0);
-    Serial.print("\tCommand: "); Serial.println("0");
-  }
+void motorBackward() {
+  digitalWrite(motorPosPin, LOW);
+  digitalWrite(motorNegPin, HIGH);
+}
 
-  delay(10);
+void motorStop() {
+  digitalWrite(motorPosPin, LOW);
+  digitalWrite(motorNegPin, LOW);
 }
