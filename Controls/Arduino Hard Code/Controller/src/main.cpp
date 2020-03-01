@@ -18,8 +18,8 @@
 const uint32_t loopPeriodMillis = 10; // 10ms = 100hz
 
 const double Kp = 5;
-const double Ki = 0.00000;
-const double Kd = 0.000;
+const double Ki = 0.0000001;
+const double Kd = 0.0001;
 
 int potInput    = 0;
 int potFeedback = 0;
@@ -34,7 +34,7 @@ uint32_t  printMillis = 0;
 
 double effort = 0;
 
-void PID();
+void PID(int target);
 void motorForward();
 void motorBackward();
 void motorStop();
@@ -49,20 +49,18 @@ void setup() {
 
 void loop() {
 
-  PID();
-  // analogWrite(motorInputPin, 127);
-  // digitalWrite(motorPosPin, HIGH);
-  // digitalWrite(motorNegPin, LOW);
+  PID(5); // target between 0 and 24
 
 }
 
-void PID() {
+void PID(int target) {
   // Deploy PID every loop period time (can also use timer interrupt)
   if (millis()- lastMillis > loopPeriodMillis) {
     lastMillis = millis(); // reset time
 
+    /* ENTER INPUT IN FIRST VALUE OF MAP */
     // potInput = analogRead(motorInputPin);
-    potInput = map(12, 0, 24, 200, 1023);
+    potInput = map(target, 0, 24, 150, 1023);
     potFeedback = analogRead(feedbackPotPin);
     error = potInput - potFeedback;
 
@@ -77,9 +75,9 @@ void PID() {
     effort = (Kp * error) + (Ki * errorSum) + (Kd * dError);
     lastError = error; // reset error
 
-    Serial.print("Pot input: "); Serial.print(potInput); 
-    Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
-    Serial.print("\tError: "); Serial.print(error); 
+    // Serial.print("Pot input: "); Serial.print(potInput); 
+    // Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
+    // Serial.print("\tError: "); Serial.print(error); 
 
     if (effort > 255) {
       effort = 255;
@@ -88,9 +86,9 @@ void PID() {
     }
     analogWrite(motorInputPin, abs(effort));
 
-    Serial.print("\tdError: "); Serial.print(dError); 
-    Serial.print("\tError sum: "); Serial.print(errorSum);
-    Serial.print("\tEffort: "); Serial.println(effort);
+    // Serial.print("\tdError: "); Serial.print(dError); 
+    // Serial.print("\tError sum: "); Serial.print(errorSum);
+    // Serial.print("\tEffort: "); Serial.println(effort);
 
     if (effort > 0)
       motorForward();
