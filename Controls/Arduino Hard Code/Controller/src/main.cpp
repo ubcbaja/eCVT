@@ -10,14 +10,14 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#define inputPotPin A0
+#define motorInputPin 3
 #define feedbackPotPin A1
 #define motorPosPin 5
 #define motorNegPin 6
 
-const uint32_t loopPeriodMillis = 2; // 10ms = 100hz
+const uint32_t loopPeriodMillis = 10; // 10ms = 100hz
 
-const double Kp = 1;
+const double Kp = 5;
 const double Ki = 0.00000;
 const double Kd = 0.000;
 
@@ -35,13 +35,13 @@ uint32_t  printMillis = 0;
 double effort = 0;
 
 void PID();
-void motorForward(void);
-void motorBackward(void);
-void motorStop(void);
+void motorForward();
+void motorBackward();
+void motorStop();
 
 void setup() {
   Serial.begin(9600);
-  pinMode(inputPotPin, INPUT);
+  pinMode(motorInputPin, OUTPUT);
   pinMode(feedbackPotPin, INPUT);
   pinMode(motorPosPin, OUTPUT);
   pinMode(motorNegPin, OUTPUT);
@@ -49,9 +49,10 @@ void setup() {
 
 void loop() {
 
-  // Serial.print("Enter a number between 0 and 24: ");
-  // userInput = Serial.read();
   PID();
+  // analogWrite(motorInputPin, 127);
+  // digitalWrite(motorPosPin, HIGH);
+  // digitalWrite(motorNegPin, LOW);
 
 }
 
@@ -60,13 +61,13 @@ void PID() {
   if (millis()- lastMillis > loopPeriodMillis) {
     lastMillis = millis(); // reset time
 
-    // potInput = analogRead(inputPotPin);
-    potInput = map(12, 0, 24, 0, 1023);
+    // potInput = analogRead(motorInputPin);
+    potInput = map(12, 0, 24, 200, 1023);
     potFeedback = analogRead(feedbackPotPin);
     error = potInput - potFeedback;
 
     // Stop motor if error too small
-    // if ((error < 25) && (error > -25)) {
+    // if ((error < 10) && (error > -10)) {
     //   motorStop();
     //   return;
     // }
@@ -80,19 +81,23 @@ void PID() {
     Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
     Serial.print("\tError: "); Serial.print(error); 
 
-    Serial.print("\tdError: "); Serial.print(dError); 
-    Serial.print("\t Error sum: "); Serial.print(errorSum);
-    Serial.print("\t Effort: "); Serial.println(effort);
-
-    if (abs(effort) > 255) {
+    if (effort > 255) {
       effort = 255;
-    } 
-    analogWrite(inputPotPin, abs(effort));
+    } else if (effort < -255) {
+      effort = -255;
+    }
+    analogWrite(motorInputPin, abs(effort));
+
+    Serial.print("\tdError: "); Serial.print(dError); 
+    Serial.print("\tError sum: "); Serial.print(errorSum);
+    Serial.print("\tEffort: "); Serial.println(effort);
 
     if (effort > 0)
       motorForward();
-    if (effort < 0)
+    else if (effort < 0)
       motorBackward();
+    else
+      motorStop();
   }
 }
 
