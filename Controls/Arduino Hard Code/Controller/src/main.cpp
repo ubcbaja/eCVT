@@ -15,7 +15,7 @@
 #define motorPosPin 5
 #define motorNegPin 6
 
-const uint32_t loopPeriodMillis = 10; // 10ms = 100hz
+const uint32_t loopPeriodMillis = 2; // 10ms = 100hz
 
 const double Kp = 5;
 const double Ki = 0.0000001;
@@ -49,7 +49,7 @@ void setup() {
 
 void loop() {
 
-  PID(5); // target between 0 and 24
+  PID(3); // target between 0 and 24
 
 }
 
