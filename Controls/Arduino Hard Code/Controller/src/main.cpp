@@ -11,6 +11,7 @@
 #include <Wire.h>
 
 #define motorInputPin 3
+#define userInputPin A0
 #define feedbackPotPin A1
 #define motorPosPin 5
 #define motorNegPin 6
@@ -23,7 +24,6 @@ const double Kd = 0.0001;
 
 int potInput    = 0;
 int potFeedback = 0;
-int userInput   = 0;
 
 int32_t   error       = 0;
 int32_t   dError      = 0;
@@ -55,12 +55,11 @@ void loop() {
 
 void PID(int target) {
   // Deploy PID every loop period time (can also use timer interrupt)
-  if (millis()- lastMillis > loopPeriodMillis) {
+  if (millis() - lastMillis > loopPeriodMillis) {
     lastMillis = millis(); // reset time
 
-    /* ENTER INPUT IN FIRST VALUE OF MAP */
-    // potInput = analogRead(motorInputPin);
-    potInput = map(target, 0, 24, 150, 1023);
+    potInput = map(analogRead(userInputPin), 0, 1023, 150, 1023);
+    // potInput = map(target, 0, 24, 150, 1023);
     potFeedback = analogRead(feedbackPotPin);
     error = potInput - potFeedback;
 
