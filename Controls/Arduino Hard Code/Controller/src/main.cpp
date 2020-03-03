@@ -16,7 +16,7 @@
 #define motorPosPin 5
 #define motorNegPin 6
 
-const uint32_t loopPeriodMillis = 2; // 10ms = 100hz
+const uint32_t loopPeriodMillis = 2; // freq = 1000/num [Hz]
 
 const double Kp = 5;
 const double Ki = 0.0000001;
