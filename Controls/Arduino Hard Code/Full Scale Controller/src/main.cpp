@@ -1,11 +1,28 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#define potPin A0
+#define potFeedbackPin A0
+#define potInputPin A1
 #define motorPosPin 5
 #define motorNegPin 6
 
-int potInput = 0;
+const uint32_t loopPeriodMillis = 2; // freq = 1000/num [Hz]
+
+const double Kp = 1;
+const double Ki = 0.000000;
+const double Kd = 0.000;
+
+int potInput    = 0;
+int potFeedback = 0;
+
+int32_t   error       = 0;
+int32_t   dError      = 0;
+int32_t   lastError   = 0;
+int32_t   errorSum    = 0;
+uint32_t  lastMillis  = 0;
+uint32_t  printMillis = 0;
+
+double effort = 0;
 
 void PID();
 void forward(int command);
@@ -14,18 +31,52 @@ void stop();
 
 void setup() {
   Serial.begin(9600);
-  pinMode(potPin, INPUT);
+  pinMode(potFeedbackPin, INPUT);
   pinMode(motorPosPin, OUTPUT);
   pinMode(motorNegPin, OUTPUT);
 }
 
 void loop() {
+  PID();
+}
 
-  potInput = map(analogRead(potPin), 0, 1023, 0, 255);
-  Serial.print("Pot input:\t"); Serial.println(potInput);
+/*
+  Deploy PID controller
+*/
+void PID() {
+  if (millis() - lastMillis > loopPeriodMillis) {
+    lastMillis = millis(); // reset time
 
-  analogWrite(motorPosPin, potInput);
-  analogWrite(motorNegPin, 0);
+    potInput = analogRead(potInputPin);
+    potFeedback = analogRead(potFeedbackPin);
+    error = potInput - potFeedback;
+
+    dError = error - lastError;
+    errorSum += error; // accumulate error
+    effort = (Kp * error) + (Ki * errorSum) + (Kd * dError);
+    lastError = error; // reset error
+
+    // Serial.print("Pot input: "); Serial.print(potInput); 
+    // Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
+    // Serial.print("\tError: "); Serial.print(error); 
+
+    if (effort > 255) {
+      effort = 255;
+    } else if (effort < -255) {
+      effort = -255;
+    }
+
+    // Serial.print("\tdError: "); Serial.print(dError); 
+    // Serial.print("\tError sum: "); Serial.print(errorSum);
+    // Serial.print("\tEffort: "); Serial.println(effort);
+
+    if (effort > 0)
+      forward(effort);
+    else if (effort < 0)
+      backward(abs(effort));
+    else
+      stop();
+  }
 }
 
 /*
