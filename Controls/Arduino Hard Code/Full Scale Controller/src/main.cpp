@@ -2,7 +2,7 @@
 #include <Wire.h>
 
 #define potFeedbackPin A0
-#define potInputPin A1
+#define potInputPin A2
 #define motorPosPin 5
 #define motorNegPin 6
 
@@ -48,7 +48,8 @@ void PID() {
     lastMillis = millis(); // reset time
 
     potInput = analogRead(potInputPin);
-    potFeedback = analogRead(potFeedbackPin);
+    // potFeedback = analogRead(potFeedbackPin);
+    potFeedback = 512;
     error = potInput - potFeedback;
 
     dError = error - lastError;
