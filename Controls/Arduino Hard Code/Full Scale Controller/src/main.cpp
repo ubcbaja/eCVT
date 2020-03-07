@@ -5,6 +5,7 @@
 #define potInputPin A2
 #define motorPosPin 5
 #define motorNegPin 6
+#define limitSwitchPin 2
 
 const uint32_t loopPeriodMillis = 2; // freq = 1000/num [Hz]
 
@@ -34,6 +35,8 @@ void setup() {
   pinMode(potFeedbackPin, INPUT);
   pinMode(motorPosPin, OUTPUT);
   pinMode(motorNegPin, OUTPUT);
+  pinMode(limitSwitchPin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(limitSwitchPin), stop, LOW);
 }
 
 void loop() {
