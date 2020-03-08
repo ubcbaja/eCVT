@@ -14,7 +14,7 @@ const double Ki = 0.000000;
 const double Kd = 0.000;
 
 int potInput    = 0;
-int potFeedback = 0;
+int potFeedback = 512;
 
 int32_t   error       = 0;
 int32_t   dError      = 0;
@@ -29,6 +29,7 @@ void PID();
 void forward(int command);
 void backward(int command);
 void stop();
+void estop(); // emergency stop
 
 void setup() {
   Serial.begin(9600);
@@ -36,7 +37,7 @@ void setup() {
   pinMode(motorPosPin, OUTPUT);
   pinMode(motorNegPin, OUTPUT);
   pinMode(limitSwitchPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(limitSwitchPin), stop, LOW);
+  attachInterrupt(digitalPinToInterrupt(limitSwitchPin), estop, LOW);
 }
 
 void loop() {
@@ -52,7 +53,6 @@ void PID() {
 
     potInput = analogRead(potInputPin);
     // potFeedback = analogRead(potFeedbackPin);
-    potFeedback = 512;
     error = potInput - potFeedback;
 
     dError = error - lastError;
@@ -102,9 +102,18 @@ void backward(int command) {
 }
 
 /*
-  Stop motor
+  Stop motor & return to new command
 */
 void stop() {
   analogWrite(motorPosPin, 0);
   analogWrite(motorNegPin, 0);
+}
+
+/*
+  Stop motor & reset command input
+*/
+void estop() {
+  analogWrite(motorPosPin, 0);
+  analogWrite(motorNegPin, 0);
+  potFeedback = potInput;
 }
