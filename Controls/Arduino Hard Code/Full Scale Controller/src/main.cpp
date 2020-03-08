@@ -36,7 +36,7 @@ void setup() {
   pinMode(motorPosPin, OUTPUT);
   pinMode(motorNegPin, OUTPUT);
   pinMode(limitSwitchPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(limitSwitchPin), stop, FALLING);
+  attachInterrupt(digitalPinToInterrupt(limitSwitchPin), stop, LOW);
 }
 
 void loop() {
