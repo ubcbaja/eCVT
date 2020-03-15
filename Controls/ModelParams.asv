@@ -1,0 +1,17 @@
+% Plant parameters
+Jr = 0.0001;    % estimate
+Je = 0.01;      % estimate
+Be = 0.001;     % estimate
+La = 0.02;      % estimate
+Ra = 2;         % estimate
+Kt = 0.283;
+Kv = 0.105;
+r = 0.05;
+m = 1;          % estimate
+Kspring = 100;  % estimate, spring constant
+Kpot = 0.7003;  % estimate, pot constant
+
+% PID gains
+Kp = 111.1;
+Ki = 734.4;
+Kd = 210.78;
