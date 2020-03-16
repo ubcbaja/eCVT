@@ -17,7 +17,9 @@ PM = 97;                                    % PM to add
 G_Wc = 0.003;                               % abs gain at Wc
 alpha = (1+sind(PM))/(1-sind(PM));
 tau = 1/(Wc*sqrt(alpha));
-Kp = 1/(G_Wc*sqrt(alpha));
+
+Kp = 1/(G_Wc*sqrt(alpha)) + 500;
+Kd = 6;
 
 % PID gains
 % Kp = 111.1;
