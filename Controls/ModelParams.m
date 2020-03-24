@@ -12,12 +12,12 @@ Kpot = 0.2653;  % estimate, pot constant    [V/rad]
 Kpwm = 1.2;     % PWM amplitifer, 6V/5V     [V/V]
 
 % Compensator parameters
-Wc = 2*pi*100;                      % 100Hz target
-PM = 70;                            % PM to add
-G_Wc = 10^(-106/20);                % abs gain at Wc
+Wc = 2*pi*10;                       % 100Hz target
+PM = 70;                        	% PM to add
+G_Wc = 0.003;                       % abs gain at Wc
 alpha = (1+sind(PM))/(1-sind(PM));
 tau = 1/(Wc*sqrt(alpha));
 
 % Proportional and derivative gains
-Kp = (1/(G_Wc*sqrt(alpha)))/10;     % /10 to compensate for 0 gain
+Kp = (1/(G_Wc*sqrt(alpha)));
 Kd = 1;
