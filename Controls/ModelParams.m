@@ -1,3 +1,5 @@
+s = tf('s');
+
 % Plant parameters
 Jr = 0.0001;    % estimate                  [kgm^2]
 Je = 0.01;      % estimate                  [kgm^2]
@@ -18,6 +20,8 @@ PM = 70;                        	% PM to add
 G_Wc = 0.003;                       % abs gain at Wc
 alpha = (1+sind(PM))/(1-sind(PM));
 tau = 1/(Wc*sqrt(alpha));
+compensator = (alpha*tau*s + 1)/(tau*s+1);
+compensator_z = c2d(compensator, Ts, 'tustin');
 
 % Proportional and derivative gains
 Kp = (1/(G_Wc*sqrt(alpha))) + 500;
@@ -55,10 +59,10 @@ xlabel("Time (s)");
 title("Rise Time Tuning");
 
 figure();
-plot(theta_Kd200_KpP1000_Z_tout, theta_Kd200_KpP1000_Z);
+plot(theta_Kd20_KpP500_sat_tout, theta_Kd20_KpP500_sat);
 grid on;
-legend("Kp = 1000, Kd = 200, Ts = 0.0001");
+legend("Kp = 500, Kd = 20");
 ylim([0 5]);
 ylabel("Angle (rad)");
 xlabel("Time (s)");
-title("Final Discrete Step Response");
+title("Final Saturated Step Response");
