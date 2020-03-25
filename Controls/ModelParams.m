@@ -13,7 +13,7 @@ Kpwm = 1.2;     % PWM amplitifer, 6V/5V     [V/V]
 Ts = 0.0001;    % digital control time      [s]
 
 % Compensator parameters
-Wc = 2*pi*10;                       % 100Hz target
+Wc = 2*pi*10;                       % 10Hz target
 PM = 70;                        	% PM to add
 G_Wc = 0.003;                       % abs gain at Wc
 alpha = (1+sind(PM))/(1-sind(PM));
@@ -22,6 +22,7 @@ tau = 1/(Wc*sqrt(alpha));
 % Proportional and derivative gains
 Kp = (1/(G_Wc*sqrt(alpha))) + 500;
 Kd = 20;
+Ki = 1;
 
 %% Plotting for dossier
 
