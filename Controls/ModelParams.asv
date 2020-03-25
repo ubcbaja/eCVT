@@ -20,8 +20,8 @@ alpha = (1+sind(PM))/(1-sind(PM));
 tau = 1/(Wc*sqrt(alpha));
 
 % Proportional and derivative gains
-Kp = (1/(G_Wc*sqrt(alpha))) + 500;
-Kd = 20;
+Kp = (1/(G_Wc*sqrt(alpha))) + 1000;
+Kd = 200;
 
 %% Plotting for dossier
 
@@ -54,10 +54,4 @@ xlabel("Time (s)");
 title("Rise Time Tuning");
 
 figure();
-plot(theta_Kd200_KpP1000_Z_tout, theta_Kd200_KpP1000_Z);
-grid on;
-legend("Kp = 1000, Kd = 200, Ts = 0.0001");
-ylim([0 5]);
-ylabel("Angle (rad)");
-xlabel("Time (s)");
-title("Final Discrete Step Response");
+plot(theta_Kd200_KpP1000_Z_tout, 
