@@ -32,7 +32,6 @@ int32_t   errorSum    = 0;
 uint32_t  lastMillis  = 0;
 uint32_t  printMillis = 0;
 
-// Initialize function prototypes
 void PID(int target, bool demo);
 void forward(int command);
 void backward(int command);
@@ -57,8 +56,8 @@ void loop() {
 
 /*
   Deploy PID controller
-  Target: desired sheave displacement (0 - 25mm)
-  Demo: demonstration mode with user input variable pot ()
+  Target: desired sheave displacement (0 - 25) in mm
+  Demo: demonstration mode with user input variable pot (true/false)
 */
 void PID(int target, bool demo) {
   if (millis() - lastMillis > loopPeriodMillis) {                           // run loop at desired frequency (system bandwidth)
@@ -77,25 +76,17 @@ void PID(int target, bool demo) {
     effort = (Kp * error) + (Ki * errorSum) + (Kd * dError);                // get control effort for PWM amplifier
     lastError = error;                                                      // reset error
 
-    // Serial.print("Pot input: "); Serial.print(potInput); 
-    // Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
-    // Serial.print("\tError: "); Serial.print(error); 
-
     if (effort > MAX_PWM) {                                                 // positive saturation of maximum PWM duty cycle
       effort = MAX_PWM;
     } else if (effort < -MAX_PWM) {                                         // negative saturation of minimum PWM duty cycle
       effort = -MAX_PWM;
     }
 
-    // Serial.print("\tdError: "); Serial.print(dError); 
-    // Serial.print("\tError sum: "); Serial.print(errorSum);
-    // Serial.print("\tEffort: "); Serial.println(effort);
-
-    if (effort > 0)                                                   // forward actuation command
+    if (effort > 0)             // forward actuation command
       forward(effort);
-    else if (effort < 0)                                              // reverse actuation command
+    else if (effort < 0)        // reverse actuation command
       backward(abs(effort));
-    else                                                              // no actuation command
+    else                        // no actuation command
       stop();
   }
 }
