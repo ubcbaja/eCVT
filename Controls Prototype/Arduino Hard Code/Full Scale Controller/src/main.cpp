@@ -61,29 +61,29 @@ void loop() {
   Demo: demonstration mode with user input variable pot ()
 */
 void PID(int target, bool demo) {
-  if (millis() - lastMillis > loopPeriodMillis) {                     // run loop at desired frequency (system bandwidth)
-    lastMillis = millis();                                            // reset time for next loop
+  if (millis() - lastMillis > loopPeriodMillis) {                           // run loop at desired frequency (system bandwidth)
+    lastMillis = millis();                                                  // reset time for next loop
 
     if (demo)
-      potInput = analogRead(potInputPin);                             // read manual potentiometer input for demonstration
+      potInput = analogRead(potInputPin);                                   // read manual potentiometer input for demonstration
     else
-      potInput = map(target, 0, MAX_TRAVEL, lowResistance, highResistance);   // 
+      potInput = map(target, 0, MAX_TRAVEL, lowResistance, highResistance); // scale desired position to resistance
     
-    potFeedback = analogRead(potFeedbackPin);                         // read potentiometer feedback pin for operation
-    error = potInput - potFeedback;                                   // calculate error from setpoint
+    potFeedback = analogRead(potFeedbackPin);                               // read potentiometer feedback pin for operation
+    error = potInput - potFeedback;                                         // calculate error from setpoint
 
-    dError = error - lastError;                                       // get difference in error (derivative)
-    errorSum += error;                                                // accumulate error (integral)
-    effort = (Kp * error) + (Ki * errorSum) + (Kd * dError);          // get control effort for PWM amplifier
-    lastError = error;                                                // reset error
+    dError = error - lastError;                                             // get difference in error (derivative)
+    errorSum += error;                                                      // accumulate error (integral)
+    effort = (Kp * error) + (Ki * errorSum) + (Kd * dError);                // get control effort for PWM amplifier
+    lastError = error;                                                      // reset error
 
     // Serial.print("Pot input: "); Serial.print(potInput); 
     // Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
     // Serial.print("\tError: "); Serial.print(error); 
 
-    if (effort > MAX_PWM) {                                               // positive saturation of maximum PWM duty cycle
+    if (effort > MAX_PWM) {                                                 // positive saturation of maximum PWM duty cycle
       effort = MAX_PWM;
-    } else if (effort < -MAX_PWM) {                                       // negative saturation of minimum PWM duty cycle
+    } else if (effort < -MAX_PWM) {                                         // negative saturation of minimum PWM duty cycle
       effort = -MAX_PWM;
     }
 
