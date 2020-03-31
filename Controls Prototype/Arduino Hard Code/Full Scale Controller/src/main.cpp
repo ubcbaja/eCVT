@@ -9,17 +9,21 @@
 #define motorNegPin 6
 #define limitSwitchMaxPin 3
 #define limitSwitchMinPin 2
+#define MAX_PWM 255
+#define MAX_TRAVEL 25
 
-// Initialize constant variables
+// Initialize controller bandwidth and gain
 const uint32_t loopPeriodMillis = 2; // freq = 1000/num [Hz]
 const double Kp = 1;
 const double Ki = 0.000000;
 const double Kd = 0.000;
 
-// Initialize variables
-int potInput    = 0;
-int potFeedback = 512;
-double effort = 0;
+// Initialize other variables
+const int lowResistance   = 150;    // calibrate linear pot lower resistance
+const int highResistance  = 1023;   // calibrate linear pot upper resistance
+int potInput              = 0;
+int potFeedback           = 0;
+double effort             = 0;
 
 int32_t   error       = 0;
 int32_t   dError      = 0;
@@ -29,7 +33,7 @@ uint32_t  lastMillis  = 0;
 uint32_t  printMillis = 0;
 
 // Initialize function prototypes
-void PID();
+void PID(int target, bool demo);
 void forward(int command);
 void backward(int command);
 void stop();
@@ -48,18 +52,24 @@ void setup() {
 }
 
 void loop() {
-  PID();                                                              // call PID control loop continuously
+  PID(10, false);                                                              // set target position of 10mm
 }
 
 /*
   Deploy PID controller
+  Target: desired sheave displacement (0 - 25mm)
+  Demo: demonstration mode with user input variable pot ()
 */
-void PID() {
+void PID(int target, bool demo) {
   if (millis() - lastMillis > loopPeriodMillis) {                     // run loop at desired frequency (system bandwidth)
     lastMillis = millis();                                            // reset time for next loop
 
-    potInput = analogRead(potInputPin);                               // read manual potentiometer input for demonstration
-    // potFeedback = analogRead(potFeedbackPin);                      // read potentiometer feedback pin for operation
+    if (demo)
+      potInput = analogRead(potInputPin);                             // read manual potentiometer input for demonstration
+    else
+      potInput = map(target, 0, MAX_TRAVEL, lowResistance, highResistance);   // 
+    
+    potFeedback = analogRead(potFeedbackPin);                         // read potentiometer feedback pin for operation
     error = potInput - potFeedback;                                   // calculate error from setpoint
 
     dError = error - lastError;                                       // get difference in error (derivative)
@@ -71,10 +81,10 @@ void PID() {
     // Serial.print("\tPot feedback: "); Serial.print(potFeedback); 
     // Serial.print("\tError: "); Serial.print(error); 
 
-    if (effort > 255) {                                               // positive saturation of maximum PWM duty cycle
-      effort = 255;
-    } else if (effort < -255) {                                       // negative saturation of minimum PWM duty cycle
-      effort = -255;
+    if (effort > MAX_PWM) {                                               // positive saturation of maximum PWM duty cycle
+      effort = MAX_PWM;
+    } else if (effort < -MAX_PWM) {                                       // negative saturation of minimum PWM duty cycle
+      effort = -MAX_PWM;
     }
 
     // Serial.print("\tdError: "); Serial.print(dError); 
@@ -109,7 +119,7 @@ void backward(int command) {
 }
 
 /*
-  Stop motor & return to new command
+  Stop motor
 */
 void stop() {
   analogWrite(motorPosPin, 0);
@@ -121,15 +131,13 @@ void stop() {
 */
 void eStopMax() {
   analogWrite(motorPosPin, 0);
-  analogWrite(motorNegPin, 0);
-  potFeedback = potInput;
+  analogWrite(motorNegPin, MAX_PWM);
 }
 
 /*
   Stop motor at minimum & actuate other way
 */
 void eStopMin() {
-  analogWrite(motorPosPin, 0);
+  analogWrite(motorPosPin, MAX_PWM);
   analogWrite(motorNegPin, 0);
-  potFeedback = potInput;
 }
