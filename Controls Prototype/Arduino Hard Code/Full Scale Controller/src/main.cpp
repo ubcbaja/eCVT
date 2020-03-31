@@ -36,11 +36,10 @@ void PID(int target, bool demo);
 void forward(int command);
 void backward(int command);
 void stop();
-void eStopMax(); // stop if reached max and return other way
-void eStopMin(); // stop if reached min and return other way
+void eStopMax();
+void eStopMin();
 
 void setup() {
-  // Serial.begin(9600);
   pinMode(potFeedbackPin, INPUT);                                             // set feedback pin as input
   pinMode(motorPosPin, OUTPUT);                                               // set PWM amplifier + pin as output
   pinMode(motorNegPin, OUTPUT);                                               // set PWM amplifier - pin as output 
@@ -51,7 +50,7 @@ void setup() {
 }
 
 void loop() {
-  PID(10, false);                                                              // set target position of 10mm
+  PID(10, false);                                                             // set target position of 10mm
 }
 
 /*
