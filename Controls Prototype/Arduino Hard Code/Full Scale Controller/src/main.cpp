@@ -33,15 +33,18 @@ void PID();
 void forward(int command);
 void backward(int command);
 void stop();
-void estop(); // emergency stop
+void eStopMax(); // stop if reached max and return other way
+void eStopMin(); // stop if reached min and return other way
 
 void setup() {
   // Serial.begin(9600);
-  pinMode(potFeedbackPin, INPUT);                                     // set feedback pin as input
-  pinMode(motorPosPin, OUTPUT);                                       // set PWM amplifier + pin as output
-  pinMode(motorNegPin, OUTPUT);                                       // set PWM amplifier - pin as output 
-  pinMode(limitSwitchMaxPin, INPUT_PULLUP);                              // set limit switch as input with pullup
-  attachInterrupt(digitalPinToInterrupt(limitSwitchMaxPin), estop, LOW); // set interrupt pin for triggering at logic low
+  pinMode(potFeedbackPin, INPUT);                                             // set feedback pin as input
+  pinMode(motorPosPin, OUTPUT);                                               // set PWM amplifier + pin as output
+  pinMode(motorNegPin, OUTPUT);                                               // set PWM amplifier - pin as output 
+  pinMode(limitSwitchMaxPin, INPUT_PULLUP);                                   // set limit switch as input with pullup
+  pinMode(limitSwitchMinPin, INPUT_PULLUP);                                   // set limit switch as input with pullup
+  attachInterrupt(digitalPinToInterrupt(limitSwitchMaxPin), eStopMax, LOW);   // set max limit pin for interrupt
+  attachInterrupt(digitalPinToInterrupt(limitSwitchMinPin), eStopMin, LOW);   // set min limit pin for interrupt
 }
 
 void loop() {
@@ -114,11 +117,19 @@ void stop() {
 }
 
 /*
-  Stop motor & reset command input (emergency)
+  Stop motor at maximum & actuate other way
 */
-void estop() {
+void eStopMax() {
   analogWrite(motorPosPin, 0);
   analogWrite(motorNegPin, 0);
   potFeedback = potInput;
 }
 
+/*
+  Stop motor at minimum & actuate other way
+*/
+void eStopMin() {
+  analogWrite(motorPosPin, 0);
+  analogWrite(motorNegPin, 0);
+  potFeedback = potInput;
+}
