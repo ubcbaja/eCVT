@@ -7,7 +7,8 @@
 #define potInputPin A2
 #define motorPosPin 5
 #define motorNegPin 6
-#define limitSwitchPin 2
+#define limitSwitchMaxPin 3
+#define limitSwitchMinPin 2
 
 // Initialize constant variables
 const uint32_t loopPeriodMillis = 2; // freq = 1000/num [Hz]
@@ -39,8 +40,8 @@ void setup() {
   pinMode(potFeedbackPin, INPUT);                                     // set feedback pin as input
   pinMode(motorPosPin, OUTPUT);                                       // set PWM amplifier + pin as output
   pinMode(motorNegPin, OUTPUT);                                       // set PWM amplifier - pin as output 
-  pinMode(limitSwitchPin, INPUT_PULLUP);                              // set limit switch as input with pullup
-  attachInterrupt(digitalPinToInterrupt(limitSwitchPin), estop, LOW); // set interrupt pin for triggering at logic low
+  pinMode(limitSwitchMaxPin, INPUT_PULLUP);                              // set limit switch as input with pullup
+  attachInterrupt(digitalPinToInterrupt(limitSwitchMaxPin), estop, LOW); // set interrupt pin for triggering at logic low
 }
 
 void loop() {
